@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospitify - Création de sites web pour Hôtels & Restaurants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Variables et styles de base */
+:root {
+--primary-color: #00ADB5; /* Vert turquoise */
+--secondary-color: #EEEEEE; /* Gris clair */
+--text-color: #333;
+--bg-color: #FFF;
+}
+
+body {
+font-family: 'Poppins', sans-serif;
+margin: 0;
+padding: 0;
+background-color: var(--bg-color);
+color: var(--text-color);
+line-height: 1.6;
+scroll-behavior: smooth; /* Défilement fluide pour les liens d'ancrage */
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 20px;
+}
+
+/* En-tête et navigation */
+.header {
+position: fixed;
+width: 100%;
+top: 0;
+left: 0;
+background-color: rgba(255, 255, 255, 0.95);
+padding: 15px 0;
+z-index: 1000;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+display: flex;
+justify-content: space-between;
+align-items: center;
+transition: transform 0.3s ease-in-out;
+}
+
+.header.hidden {
+transform: translateY(-100%);
+}
+
+.logo {
+font-size: 24px;
+font-weight: 700;
+color: var(--primary-color);
+text-decoration: none;
+margin-left: 20px;
+}
+
+/* Styles du menu mobile */
+.nav-links {
+list-style: none;
+margin: 0;
+padding: 0;
+display: flex; /* Toujours afficher le menu */
+flex-direction: column;
+position: fixed;
+top: 60px; /* Commence sous le header */
+background-color: var(--bg-color);
+width: 70%;
+max-width: 300px;
+height: 100%;
+padding: 20px;
+box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+z-index: 999;
+box-sizing: border-box;
+right: -100%; /* Cache le menu à droite par défaut sur mobile */
+transition: right 0.5s ease-in-out;
+}
+
+/* Affiche le menu lorsque la classe active est présente */
+.nav-links.active {
+right: 0;
+}
+
+.nav-links li a {
+display: block;
+padding: 15px;
+text-decoration: none;
+color: var(--text-color);
+font-weight: 600;
+transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+color: var(--primary-color);
+}
+
+/* Animation de la croix */
+.hamburger-menu {
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+width: 30px;
+height: 25px;
+cursor: pointer;
+margin-right: 20px;
+z-index: 1000;
+}
+
+.hamburger-menu .bar {
+width: 100%;
+height: 3px;
+background-color: var(--primary-color);
+transition: all 0.3s ease-in-out;
+}
+
+.hamburger-menu.active .bar:nth-child(1) {
+transform: translateY(11px) rotate(45deg);
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+opacity: 0;
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+transform: translateY(-11px) rotate(-45deg);
+}
+
+/* Règle spécifique pour les écrans PC */
+@media (min-width: 768px) {
+.header {
+justify-content: space-between;
+padding: 15px 40px;
+}
+
+.nav {
+display: flex;
+flex-grow: 1;
+justify-content: center;
+}
+
+.nav-links {
+display: flex; /* Revenir à la ligne pour les PC */
+flex-direction: row;
+position: static;
+box-shadow: none;
+width: auto;
+height: auto;
+padding-top: 0;
+right: auto;
+padding: 0;
+transform: none !important;
+transition: none !important;
+gap: 20px;
+align-items: center;
+}
+.hamburger-menu {
+display: none;
+}
+.logo {
+margin-left: 0;
+flex-shrink: 0;
+}
+}
+
+/* Sections générales */
+section {
+padding: 100px 0;
+text-align: center;
+}
+
+h1, h2, h3 {
+font-weight: 700;
+color: var(--text-color);
+}
+
+h2:after {
+content: '';
+display: block;
+width: 60px;
+height: 4px;
+background-color: var(--primary-color);
+margin: 10px auto 0;
+}
+
+/* Section "Hero" - Accueil */
+.hero {
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+background-color: var(--secondary-color);
+padding-top: 60px;
+}
+
+.hero h1 {
+font-size: 48px;
+margin-bottom: 20px;
+}
+
+/* Règle CSS pour les écrans mobiles */
+@media (max-width: 767px) {
+.hero h1 {
+font-size: 32px;
+}
+}
+
+.hero .subtitle {
+font-size: 20px;
+color: #555;
+margin-bottom: 40px;
+}
+
+.cta-button {
+display: inline-block;
+background-color: var(--primary-color);
+color: #FFF;
+padding: 15px 30px;
+border-radius: 50px;
+text-decoration: none;
+font-weight: 600;
+transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.cta-button:hover {
+transform: translateY(-5px);
+box-shadow: 0 5px 15px rgba(0, 173, 181, 0.4);
+}
+
+/* Sections de contenu */
+#apropos, #services, #portfolio, #contact, #expertise {
+padding: 80px 0;
+background-color: var(--bg-color);
+}
+
+.service-cards, .portfolio-items {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 30px;
+margin-top: 40px;
+}
+
+.card {
+background-color: var(--secondary-color);
+padding: 30px;
+border-radius: 10px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+flex-basis: 300px;
+transition: transform 0.3s;
+}
+
+.card:hover {
+transform: translateY(-10px);
+}
+
+.portfolio-item {
+flex-basis: 450px;
+text-align: left;
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-item img {
+width: 100%;
+height: auto;
+display: block;
+transition: transform 0.3s;
+}
+
+.portfolio-item:hover img {
+transform: scale(1.05);
+}
+
+.portfolio-item .info {
+padding: 20px;
+background-color: var(--bg-color);
+}
+
+.portfolio-item .info a {
+font-size: 18px;
+font-weight: 600;
+text-decoration: none;
+color: var(--primary-color);
+display: inline-block;
+margin-top: 10px;
+}
+
+/* Section Expertise */
+#expertise {
+text-align: left;
+}
+
+#expertise .container {
+display: flex;
+align-items: center;
+flex-direction: column;
+text-align: center;
+}
+
+#expertise p {
+max-width: 800px;
+margin-bottom: 20px;
+text-align: justify;
+}
+
+/* Formulaire de contact */
+#contact-form {
+max-width: 600px;
+margin: 0 auto;
+text-align: left;
+}
+
+#contact-form input, #contact-form textarea {
+width: 100%;
+padding: 15px;
+margin-bottom: 20px;
+border: 1px solid #ddd;
+border-radius: 5px;
+box-sizing: border-box;
+transition: border-color 0.3s;
+}
+
+#contact-form input:focus, #contact-form textarea:focus {
+outline: none;
+border-color: var(--primary-color);
+}
+
+#contact-form button {
+width: 100%;
+background-color: var(--primary-color);
+color: #FFF;
+padding: 15px;
+border: none;
+border-radius: 5px;
+font-size: 18px;
+font-weight: 600;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+#contact-form button:hover {
+background-color: #008C91;
+}
+
+.contact-links {
+display: flex;
+justify-content: center;
+gap: 20px;
+margin-bottom: 30px;
+}
+
+.contact-button {
+display: inline-block;
+padding: 12px 25px;
+border: 2px solid var(--primary-color);
+color: var(--primary-color);
+border-radius: 50px;
+text-decoration: none;
+font-weight: 600;
+transition: background-color 0.3s, color 0.3s;
+}
+
+.contact-button:hover {
+background-color: var(--primary-color);
+color: #fff;
+}
+
+/* Pied de page */
+.footer {
+background-color: #333;
+color: #FFF;
+text-align: center;
+padding: 20px 0;
+font-size: 14px;
+}
+
+/* Animations d'apparition */
+.fade-in {
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+opacity: 1;
+transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+<a href="#accueil" class="logo">Hospitify</a>
+<nav class="nav">
+<div class="hamburger-menu" id="hamburger-menu">
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+<ul class="nav-links" id="nav-links">
+<li><a href="#accueil">Accueil</a></li>
+<li><a href="#apropos">À Propos</a></li>
+<li><a href="#expertise">Mon Expertise</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#portfolio">Portfolio</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+</nav>
+</header>
+
+<section id="accueil" class="hero fade-in">
+<div class="container">
+<h1>Créez une expérience en ligne unique pour votre établissement.</h1>
+<p class="subtitle">Sites web rapides et sur mesure pour hôteliers et restaurateurs.</p>
+<a href="#portfolio" class="cta-button">Voir mes projets</a>
+</div>
+</section>
+
+<section id="apropos" class="apropos fade-in">
+<div class="container">
+<h2>Mon approche</h2>
+<p>Spécialisé dans la création de sites web sur mesure pour les secteurs de l'hôtellerie et de la restauration, je m'engage à allier **rapidité, design professionnel et fonctionnalité**. Mon objectif est de vous offrir un site qui non seulement **attire les regards**, mais qui est également **optimisé pour convertir vos visiteurs en clients**.</p>
+<p>Chaque projet est une collaboration unique. Je travaille avec vous pour comprendre les spécificités de votre établissement et traduire votre identité en une présence en ligne percutante.</p>
+</div>
+</section>
+
+<section id="expertise" class="expertise fade-in">
+<div class="container">
+<h2>Mon Expertise</h2>
+<p>Mon parcours m'a permis de développer une expertise dans le développement de sites pour les professionnels de l'accueil. Je comprends les enjeux uniques de l'hôtellerie et de la restauration : l'importance de visuels de haute qualité, la nécessité d'un système de réservation fiable, et l'impact d'une première impression en ligne réussie. Je travaille exclusivement avec les technologies modernes pour garantir des sites rapides, sécurisés et faciles à mettre à jour. Mon but est de vous fournir un outil de communication et de vente qui fonctionne pour vous 24h/24, 7j/7.</p>
+</div>
+</section>
+
+<section id="services" class="services fade-in">
+<div class="container">
+<h2>Mes services</h2>
+<div class="service-cards">
+<div class="card">
+<h3>Sites vitrine sur mesure</h3>
+<p>Présentez votre établissement avec une élégance professionnelle qui met en valeur votre ambiance et votre offre. Chaque détail est pensé pour refléter votre unicité.</p>
+</div>
+<div class="card">
+<h3>Intégration de systèmes de réservation</h3>
+<p>Facilitez la vie de vos clients en leur permettant de réserver directement une chambre ou une table depuis votre site, en toute simplicité.</p>
+</div>
+<div class="card">
+<h3>Refonte de site et modernisation</h3>
+<p>Votre site existant est-il dépassé ? Offrez-lui une nouvelle jeunesse avec un design moderne, des animations et une ergonomie optimisée pour les mobiles.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="portfolio" class="portfolio fade-in">
+<div class="container">
+<h2>Mes réalisations</h2>
+<div class="portfolio-items">
+<div class="portfolio-item">
+<img src="https://www.cherifaistesvalises.com/wp-content/uploads/2022/09/238596.webp" alt="Site pour un hôtel">
+<div class="info">
+<h3>Site vitrine élégant pour Hôtel</h3>
+<p>Une interface minimaliste et moderne conçue pour refléter le standing de l'établissement. J'ai mis l'accent sur une navigation intuitive et des galeries d'images immersives pour mettre en valeur les chambres et les services.</p>
+<a href="https://hospetify.github.io/hotel/" target="_blank">Voir le projet</a>
+</div>
+</div>
+<div class="portfolio-item">
+<img src="https://dq5r178u4t83b.cloudfront.net/wp-content/uploads/sites/62/2017/05/28125243/Le-Royal-Monceau-Raffles-Paris-Il-Carpaccio-Salle-%40thetravelbuds-4.jpg" alt="Site pour un restaurant italien">
+<div class="info">
+<h3>Présence en ligne gastronomique pour Restaurant</h3>
+<p>Création d'un site à l'atmosphère chaleureuse et accueillante, qui donne un avant-goût de la gastronomie et de l'ambiance du lieu.</p>
+<a href="https://hospetify.github.io/restaurent-italien/" target="_blank">Voir le projet</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="contact" class="contact fade-in">
+<div class="container">
+<h2>Contactez-moi</h2>
+<p>Prêt à discuter de votre projet ? N'hésitez pas à me contacter par téléphone ou par email.</p>
+<div class="contact-links">
+<a href="tel:+32489750320" class="contact-button">Appeler</a>
+<a href="mailto:Hospitify4@gmail.com" class="contact-button">Envoyer un email</a>
+</div>
+<p>Vous pouvez aussi me contacter via le formulaire ci-dessous.</p>
+<form id="contact-form" action="https://formspree.io/f/movloevq" method="POST">
+<input type="text" name="name" placeholder="Votre nom" required>
+<input type="email" name="email" placeholder="Votre email" required>
+<textarea name="message" rows="5" placeholder="Votre message" required></textarea>
+<button type="submit">Envoyer</button>
+</form>
+</div>
+</section>
+
+<footer class="footer">
+<div class="container">
+<p>&copy; 2025 Hospitify. Tous droits réservés.</p>
+</div>
+</footer>
+
+<script>
+// JavaScript pour les animations et le menu hamburger
+document.addEventListener('DOMContentLoaded', () => {
+// Menu hamburger
+const hamburger = document.getElementById('hamburger-menu');
+const navLinks = document.getElementById('nav-links');
+
+hamburger.addEventListener('click', () => {
+navLinks.classList.toggle('active');
+hamburger.classList.toggle('active');
+});
+
+// Fermer le menu après avoir cliqué sur un lien
+document.querySelectorAll('.nav-links a').forEach(link => {
+link.addEventListener('click', () => {
+// Ferme le menu en retirant les classes 'active'
+navLinks.classList.remove('active');
+hamburger.classList.remove('active');
+});
+});
+
+// Animations au défilement
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+}
+});
+}, {
+threshold: 0.2 // Déclenche l'animation lorsque 20% de l'élément est visible
+});
+
+document.querySelectorAll('.fade-in').forEach(section => {
+observer.observe(section);
+});
+});
+</script>
+</body>
+</html>
+
